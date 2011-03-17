@@ -20,7 +20,7 @@ def create_fakeroot
 	sh "rm -rf fakeroot"
 	sh "mkdir fakeroot"
 	fakeroot = File.expand_path("fakeroot")
-	sh "#{distdir}/installer --auto='/usr/local' --destdir='#{fakeroot}' #{ENV['ARGS']}"
+	sh "#{distdir}/installer --auto='/usr/local' --destdir='#{fakeroot}' --dont-install-useful-gems --no-dev-docs #{ENV['ARGS']}"
 	puts "*** Ruby Enterprise Edition has been installed to #{fakeroot}"
 end
 
