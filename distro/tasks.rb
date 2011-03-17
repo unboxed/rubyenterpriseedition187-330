@@ -64,7 +64,7 @@ def create_distdir(distdir = DISTDIR, sudo = false)
 		sh 'bison', '-y', '-o', 'parse.c', 'parse.y'
 	end
 	
-	sh "git diff copy_on_write..zero_copy_context_switch > #{distdir}/fast-threading.patch"
+	sh "git diff origin/copy_on_write..origin/zero_copy_context_switch > #{distdir}/fast-threading.patch"
 	
 	sh "cp distro/installer distro/installer.rb distro/platform_info.rb " <<
 		"distro/dependencies.rb distro/optparse.rb #{distdir}/"
