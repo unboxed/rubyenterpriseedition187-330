@@ -79,9 +79,11 @@ def create_distdir(distdir = DISTDIR, sudo = false)
 		end
 	end
 	rubygems_package = File.expand_path("distro/#{RUBYGEMS_PACKAGE}")
+	rubygems_patch = File.expand_path("distro/rubygems_disable_docs.patch")
 	Dir.chdir(distdir) do
 		sh "tar", "xzf", rubygems_package
 		sh "mv rubygems* rubygems"
+		sh "patch -p0 < #{rubygems_patch}"
 	end
 end
 
