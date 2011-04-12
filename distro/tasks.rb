@@ -8,7 +8,7 @@ end
 REE_VERSION = begin
 	data = File.read("version.c")
 	data =~ /REE_VERSION "(.*)"/
-	"#{$1}ubxd2"
+	"#{$1}ubxd3"
 end
 DISTDIR = "ruby-enterprise-#{VENDOR_RUBY_VERSION}-#{REE_VERSION}"
 RUBYGEMS_URL = "http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz"
