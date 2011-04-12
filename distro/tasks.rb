@@ -11,7 +11,7 @@ REE_VERSION = begin
 	"#{$1}ubxd2"
 end
 DISTDIR = "ruby-enterprise-#{VENDOR_RUBY_VERSION}-#{REE_VERSION}"
-RUBYGEMS_URL = "http://production.cf.rubygems.org/rubygems/rubygems-1.5.3.tgz"
+RUBYGEMS_URL = "http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz"
 RUBYGEMS_PACKAGE = RUBYGEMS_URL.sub(/.*\//, '')
 
 def create_fakeroot

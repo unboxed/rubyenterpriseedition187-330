@@ -1,6 +1,6 @@
 diff -ru rubygems.orig/lib/rubygems/commands/install_command.rb rubygems/lib/rubygems/commands/install_command.rb
---- rubygems.orig/lib/rubygems/commands/install_command.rb      2011-04-06 11:54:22.000000000 +0100
-+++ rubygems/lib/rubygems/commands/install_command.rb   2011-04-06 11:55:25.000000000 +0100
+--- rubygems.orig/lib/rubygems/commands/install_command.rb	2011-04-12 11:13:54.000000000 +0100
++++ rubygems/lib/rubygems/commands/install_command.rb	2011-04-12 11:14:49.000000000 +0100
 @@ -19,8 +19,8 @@
  
    def initialize
@@ -10,20 +10,20 @@ diff -ru rubygems.orig/lib/rubygems/commands/install_command.rb rubygems/lib/rub
 +      :generate_rdoc     => false,
 +      :generate_ri       => false,
        :format_executable => false,
+       :test              => false,
        :version           => Gem::Requirement.default,
-     })
-@@ -39,7 +39,7 @@
+@@ -40,7 +40,7 @@
    end
  
    def defaults_str # :nodoc:
 -    "--both --version '#{Gem::Requirement.default}' --rdoc --ri --no-force\n" \
 +    "--both --version '#{Gem::Requirement.default}' --no-rdoc --no-ri --no-force\n" \
-     "--install-dir #{Gem.dir}"
+     "--no-test --install-dir #{Gem.dir}"
    end
  
 diff -ru rubygems.orig/lib/rubygems/commands/update_command.rb rubygems/lib/rubygems/commands/update_command.rb
---- rubygems.orig/lib/rubygems/commands/update_command.rb       2011-04-06 11:54:22.000000000 +0100
-+++ rubygems/lib/rubygems/commands/update_command.rb    2011-04-06 11:55:05.000000000 +0100
+--- rubygems.orig/lib/rubygems/commands/update_command.rb	2011-04-12 11:13:54.000000000 +0100
++++ rubygems/lib/rubygems/commands/update_command.rb	2011-04-12 11:15:25.000000000 +0100
 @@ -15,8 +15,8 @@
    def initialize
      super 'update',
@@ -32,27 +32,27 @@ diff -ru rubygems.orig/lib/rubygems/commands/update_command.rb rubygems/lib/ruby
 -      :generate_ri   => true,
 +      :generate_rdoc => false,
 +      :generate_ri   => false,
-       :force         => false
+       :force         => false,
+       :test          => false
  
-     add_install_update_options
-@@ -44,7 +44,7 @@
+@@ -37,7 +37,7 @@
    end
  
    def defaults_str # :nodoc:
--    "--rdoc --ri --no-force --install-dir #{Gem.dir}"
-+    "--no-rdoc --no-ri --no-force --install-dir #{Gem.dir}"
+-    "--rdoc --ri --no-force --no-test --install-dir #{Gem.dir}"
++    "--no-rdoc --no-ri --no-force --no-test --install-dir #{Gem.dir}"
    end
  
    def usage # :nodoc:
 diff -ru rubygems.orig/lib/rubygems/install_update_options.rb rubygems/lib/rubygems/install_update_options.rb
---- rubygems.orig/lib/rubygems/install_update_options.rb        2011-04-06 11:54:22.000000000 +0100
-+++ rubygems/lib/rubygems/install_update_options.rb     2011-04-06 11:57:35.000000000 +0100
-@@ -121,7 +121,7 @@
+--- rubygems.orig/lib/rubygems/install_update_options.rb	2011-04-12 11:13:54.000000000 +0100
++++ rubygems/lib/rubygems/install_update_options.rb	2011-04-12 11:17:58.000000000 +0100
+@@ -110,7 +110,7 @@
    # Default options for the gem install command.
  
    def install_update_defaults_str
--    '--rdoc --no-force --wrappers'
-+    '--no-rdoc --no-force --wrappers'
+-    '--rdoc --no-force --no-test --wrappers'
++    '--no-rdoc --no-force --no-test --wrappers'
    end
  
  end
