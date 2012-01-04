@@ -152,6 +152,7 @@ void rb_trap_restore_mask _((void));
 RUBY_EXTERN int rb_thread_critical;
 void rb_thread_schedule _((void));
 
+RUBY_EXTERN VALUE *rb_gc_stack_end;
 RUBY_EXTERN int rb_gc_stack_grow_direction;  /* -1 for down or 1 for up */
 
 #if STACK_GROW_DIRECTION > 0
@@ -216,7 +217,11 @@ static inline VALUE *__sp(void) \
   return sp; \
 }
 #  ifdef __anyPowerPC__
+#   ifdef __APPLE__
 __defspfn("addi %0, r1, 0": "=r"(sp))
+#   else
+__defspfn("addi %0, 1, 0": "=r"(sp))
+#   endif
 #  elif defined  __i386__
 __defspfn("movl %%esp, %0": "=r"(sp))
 #  elif defined __x86_64__
@@ -229,7 +234,11 @@ __defspfn("mov %0, sp": "=r"(sp))
 #   warning No assembly version of __sp() defined for this CPU.
 #  endif
 # else
-#  define __sp()  ((VALUE *)__builtin_alloca(0))
+#  if ALLOCA_0_RETURNS_STACK_POINTER
+#    define __sp()  ((VALUE *)__builtin_alloca(0))
+#  else
+#    define __sp()  ((VALUE *)__builtin_alloca(sizeof(void *)))
+#  endif /* ALLOCA_0_RETURNS_STACK_POINTER */
 # endif
 
 #else  // not GNUC
@@ -267,14 +276,12 @@ RUBY_EXTERN VALUE *__sp(void);
 #if STACK_WIPE_METHOD == 0
 #define rb_gc_wipe_stack() ((void)0)
 #elif STACK_WIPE_METHOD == 4
-#define rb_gc_wipe_stack() do { \
-  if (rb_curr_thread) {     \
-    VALUE *end = rb_curr_thread->gc_stack_end;  \
-    VALUE *sp = __sp();            \
-    rb_curr_thread->gc_stack_end = sp;          \
-    __stack_zero(end, sp);   \
-  } \
-} while (0)
+#define rb_gc_wipe_stack() {     \
+  VALUE *end = rb_gc_stack_end;  \
+  VALUE *sp = __sp();            \
+  rb_gc_stack_end = sp;          \
+  __stack_zero(end, sp);   \
+}
 #else
 RUBY_EXTERN void rb_gc_wipe_stack(void);
 #endif
@@ -284,7 +291,7 @@ RUBY_EXTERN void rb_gc_wipe_stack(void);
 */
 #define rb_gc_update_stack_extent() do { \
     VALUE *sp = __sp(); \
-    if (rb_curr_thread && __stack_past(rb_curr_thread->gc_stack_end, sp)) rb_curr_thread->gc_stack_end = sp; \
+    if __stack_past(rb_gc_stack_end, sp) rb_gc_stack_end = sp; \
 } while(0)
 
 
